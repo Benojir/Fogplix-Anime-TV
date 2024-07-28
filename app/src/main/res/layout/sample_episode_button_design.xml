@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    tools:ignore="ContentDescription,HardcodedText,UnusedAttribute">
+
+    <Button
+        android:id="@+id/episodeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Episode 1253"
+        android:textColor="@color/teal_500"
+        android:textStyle="bold"
+        app:strokeColor="@color/teal_500"
+        app:strokeWidth="2dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+</RelativeLayout>

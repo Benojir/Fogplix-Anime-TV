@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "977052378974",
+    "project_id": "android-apps-45893",
+    "storage_bucket": "android-apps-45893.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977052378974:android:0d13143b3a1b6817d1d1cf",
+        "android_client_info": {
+          "package_name": "com.fogplix.anime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "977052378974-64rmbk627kb9i9a6s3i2ins8ue5e9pl8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdXkjrsJ-UPEUdOfPAuz3hHB7-jORQgOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "977052378974-64rmbk627kb9i9a6s3i2ins8ue5e9pl8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977052378974:android:4ea0472da658e044d1d1cf",
+        "android_client_info": {
+          "package_name": "com.fogplix.tv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "977052378974-64rmbk627kb9i9a6s3i2ins8ue5e9pl8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdXkjrsJ-UPEUdOfPAuz3hHB7-jORQgOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "977052378974-64rmbk627kb9i9a6s3i2ins8ue5e9pl8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

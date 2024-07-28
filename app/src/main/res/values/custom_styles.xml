@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="circle">
+        <item name="cornerSize">50%</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="android:strokeColor">@color/white</item>
+    </style>
+</resources>

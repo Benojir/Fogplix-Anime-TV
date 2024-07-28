@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:keepScreenOn="true"
+    tools:context=".activities.PlayerActivity"
+    tools:ignore="ContentDescription, HardcodedText">
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/exoPlayerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:visibility="invisible"
+        app:buffered_color="@color/fade_white"
+        app:controller_layout_id="@layout/exoplayer_controller"
+        app:resize_mode="fit"
+        app:show_buffering="never"
+        app:show_shuffle_button="false"
+        app:show_subtitle_button="true"
+        app:surface_type="texture_view"
+        app:use_artwork="true" />
+
+    <ProgressBar
+        android:id="@+id/bufferingProgressBar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/white"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/doubleTapSkipBackIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/fast_rewind"
+        android:text="10"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:clickable="false"
+        tools:ignore="RtlHardcoded"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="120dp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/doubleTapSkipForwardIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/fast_forward"
+        android:text="10"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:clickable="false"
+        tools:ignore="RtlHardcoded"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="120dp"
+        android:visibility="gone"/>
+
+
+    <LinearLayout
+        android:id="@+id/brightness_volume_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/round_corner"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/brightness_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/brightness_48px"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/volume_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/volume_up_48px"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/brightness_volume_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="100"
+            android:textColor="?attr/text_color"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</RelativeLayout>

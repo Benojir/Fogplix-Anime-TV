@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="theme">
+        <attr name="background_color" format="color" />
+        <attr name="text_color" format="color" />
+        <attr name="main_theme_color" format="color" />
+    </declare-styleable>
+</resources>

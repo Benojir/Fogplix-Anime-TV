@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:outlineAmbientShadowColor="@color/white"
+    android:outlineSpotShadowColor="@color/white"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="3dp"
+    android:dividerHeight="0.0px"
+    android:clipToPadding="false"
+    android:clipChildren="false"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardUseCompatPadding="false"
+    tools:ignore="HardcodedText,ContentDescription"
+    android:id="@+id/cardView"
+    tools:targetApi="p">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/genreTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:padding="15dp"
+            android:text="Genre"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="?attr/text_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

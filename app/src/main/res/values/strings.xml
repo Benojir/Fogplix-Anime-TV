@@ -1,0 +1,43 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Fogplix Anime TV</string>
+    <string name="header_layout_sub_text">Fogplix Anime</string>
+
+    <string name="subbed">Sub</string>
+    <string name="dubbed">Dub</string>
+    <string name="chinese">Chinese</string>
+    <string name="movies">Movies</string>
+    <string name="genres">Genres</string>
+    <string name="popular">Popular</string>
+    <string name="synopsis">Synopsis</string>
+
+    <string name="VIDCDN_API_URL">https://browser.foganime.com/gogoanime-api-php/generate-link.php?id=</string>
+
+    <string name="user_agent">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36</string>
+    <string name="app_sharing_message">Watch free anime (Dubbed and Subbed) with Fogplix Anime app. Download now from </string>
+    <string name="onesignal_app_id" tools:ignore="TypographyDashes,Typos">c0feb5c5-3fe1-490a-bcf2-0af7ed45a18b</string>
+    <string name="compose_shortcut_label_for_favorites">Favorites</string>
+    <string name="compose_shortcut_label_for_search">Search</string>
+
+    <string name="version_page_link">https://app.foganime.com/updates/version-tv.json</string>
+    <string name="new_notice_json_link">https://app.foganime.com/updates/fogplix-alert-tv.json</string>
+    <string name="playable_servers_status_json_link">https://app.foganime.com/updates/playable-servers-status.json</string>
+
+    <string name="official_website">https://app.foganime.com</string>
+    <string name="official_telegram_channel">https://telegram.me/FogPlix</string>
+    <string name="official_telegram_group">https://telegram.me/FogPlixGroup</string>
+    <string name="more_apps">https://app.foganime.com/more-apps.html</string>
+
+    <string name="consumet_streaming_link_api">https://api.consumet.org/anime/gogoanime/watch/</string>
+
+    <string name="gogoload_recent">https://ajax.gogocdn.net/ajax/page-recent-release.html</string>
+    <string name="gogoload_list_episodes">https://ajax.gogocdn.net/ajax/load-list-episode</string>
+    <string name="gogoanime_url">https://gogoanime3.co</string>
+
+    <string name="isp_blocked">Oops! Maybe your ISP has blocked our server. Please try using any VPN. May be it can help.
+        Please take a screenshot and report this error to us.</string>
+
+    <string name="feedback_email">hiddenpirates@outlook.com</string>
+    <string name="episode_playing_failed_message">Failed to play this episode. Please take a screenshot and report it to us. Now try to play on the web player. Just click on the below button \n</string>
+
+    <string name="temporary_synopsis">"Naruto" is a Japanese manga and anime series created by Masashi Kishimoto. The stories isolation is the fact that he houses the Nine-Tailed Fox, Kurama, within him, a powerful tailed beast that attacked the village years before Naruto was born. Despite facing these challenges, Naruto is determined to prove himself and gain the acknowledgment of the villagers.</string>
+</resources>

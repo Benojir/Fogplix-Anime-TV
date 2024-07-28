@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="favorite"
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite_for_shortcut"
+        android:shortcutShortLabel="@string/compose_shortcut_label_for_favorites"
+        android:shortcutLongLabel="@string/compose_shortcut_label_for_favorites">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.fogplix.tv"
+            android:targetClass="com.fogplix.tv.activities.FavoriteActivity" />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list determines what the user sees when
+             they launch this shortcut. -->
+        <categories android:name="android.shortcut.conversation" />
+        <capability-binding android:key="actions.intent.CREATE_MESSAGE" />
+    </shortcut>
+    <!-- Specify more shortcuts here. -->
+
+    <shortcut
+        android:shortcutId="search"
+        android:enabled="true"
+        android:icon="@drawable/ic_search_for_shortcut"
+        android:shortcutShortLabel="@string/compose_shortcut_label_for_search"
+        android:shortcutLongLabel="@string/compose_shortcut_label_for_search">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.fogplix.tv"
+            android:targetClass="com.fogplix.tv.activities.SearchActivity" />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list determines what the user sees when
+             they launch this shortcut. -->
+        <categories android:name="android.shortcut.conversation" />
+        <capability-binding android:key="actions.intent.CREATE_MESSAGE" />
+    </shortcut>
+</shortcuts>

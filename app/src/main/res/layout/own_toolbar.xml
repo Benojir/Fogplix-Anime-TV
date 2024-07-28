@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:layout_alignParentTop="true"
+    android:id="@+id/ownToolbar"
+    tools:ignore="HardcodedText">
+
+    <ImageButton
+        android:id="@+id/navbarLeftBtn"
+        style="@style/ExoStyledControls.Button.Bottom.RepeatToggle"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="Navigate"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/arrow_back_48" />
+
+    <TextView
+        android:id="@+id/ownToolbarTV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/navbarLeftBtn"
+        android:text="Favorite"
+        android:gravity="center_vertical"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:textColor="?attr/text_color"
+        android:layout_toStartOf="@+id/navbarRightBtn"
+        android:layout_marginStart="10dp"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/imageViewMiddle"
+        android:layout_width="110dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/action_bar_logo"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/navbarRightBtn"
+        style="@style/ExoStyledControls.Button.Bottom.RepeatToggle"
+        android:layout_toStartOf="@+id/navInfoBtn"
+        android:layout_centerVertical="true"
+        android:contentDescription="Mic"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/search_24"/>
+
+    <ImageButton
+        android:id="@+id/navInfoBtn"
+        style="@style/ExoStyledControls.Button.Bottom.RepeatToggle"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="Mic"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/more_vert_24"/>
+
+</RelativeLayout>

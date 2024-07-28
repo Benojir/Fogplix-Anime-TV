@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_500">#02ACAA</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#048F0A</color>
+    <color name="grey">#888888</color>
+    <color name="orange">#FF5722</color>
+    <color name="blue">#0042FF</color>
+    <color name="fade_blue">#084AEF</color>
+    <color name="fade_black">#111111</color>
+    <color name="fade_white">#E0DEDE</color>
+    <color name="light_red">#EF3977</color>
+
+    <color name="hp_theme_color">#000000</color>
+    <color name="background_color">#000000</color>
+
+
+    <color name="genre_card_1">#0F31F3</color>
+    <color name="genre_card_2">#610606</color>
+    <color name="genre_card_3">#5E166A</color>
+    <color name="genre_card_4">#04675E</color>
+    <color name="genre_card_5">#07650B</color>
+    <color name="genre_card_6">#952502</color>
+    <color name="genre_card_7">#3700CF</color>
+    <color name="genre_card_8">#351275</color>
+    <color name="genre_card_9">#775B09</color>
+    <color name="genre_card_10">#9C27B0</color>
+    <color name="genre_card_11">#0098AC</color>
+    <color name="genre_card_12">#678E3B</color>
+    <color name="genre_card_13">#A35C57</color>
+    <color name="genre_card_14">#DD8707</color>
+    <color name="genre_card_15">#33A800</color>
+    <color name="genre_card_16">#009688</color>
+    <color name="genre_card_17">#5D06EA</color>
+    <color name="genre_card_18">#E91E63</color>
+
+    <integer-array name="genre_card_colors">
+        <item>@color/genre_card_1</item>
+        <item>@color/genre_card_2</item>
+        <item>@color/genre_card_3</item>
+        <item>@color/genre_card_4</item>
+        <item>@color/genre_card_5</item>
+        <item>@color/genre_card_6</item>
+        <item>@color/genre_card_7</item>
+        <item>@color/genre_card_8</item>
+        <item>@color/genre_card_9</item>
+        <item>@color/genre_card_10</item>
+        <item>@color/genre_card_11</item>
+        <item>@color/genre_card_12</item>
+        <item>@color/genre_card_13</item>
+        <item>@color/genre_card_14</item>
+        <item>@color/genre_card_15</item>
+        <item>@color/genre_card_16</item>
+        <item>@color/genre_card_17</item>
+        <item>@color/genre_card_18</item>
+    </integer-array>
+</resources>
