@@ -4,4 +4,4 @@
  ### Join Telegram:  <a href="https://telegram.me/Fogplix">Go to Telegram</a>
 
  ### For Android Mobile visit this repository: 
-<a href="https://github.com/Fogplix-Anime">Fogplix Anime (Mobile)</a>
+<a href="https://github.com/Benojir/Fogplix-Anime">Fogplix Anime (Mobile)</a>
