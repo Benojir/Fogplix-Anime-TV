@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.media3.common.util.UnstableApi;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -23,8 +25,10 @@ import com.fogplix.tv.helpers.Scraper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+@UnstableApi
 public class DetailsActivity extends AppCompatActivity {
 
+    private static final String TAG = "MADARA";
     private ActivityDetailsBinding binding;
     private EpisodesButtonsAdapter episodesButtonsAdapter;
 
@@ -42,12 +46,11 @@ public class DetailsActivity extends AppCompatActivity {
 
         String episodeId = null;
 
-        if (intent.hasExtra("episodeId")){
+        if (intent.hasExtra("episodeId")) {
             episodeId = intent.getStringExtra("episodeId");
         }
 
         Scraper scraper = new Scraper(DetailsActivity.this, new DetailsScraperCallback() {
-            @SuppressLint("UnsafeOptInUsageError")
             @Override
             public void onScrapingComplete(JSONObject animeDetails) {
 
@@ -107,11 +110,10 @@ public class DetailsActivity extends AppCompatActivity {
                             layoutManager = new GridLayoutManager(DetailsActivity.this, 6);
                     }
 
-//                    GridLayoutManager layoutManager = new GridLayoutManager(DetailsActivity.this, 3);
                     binding.episodesBtnRecyclerView.setLayoutManager(layoutManager);
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "onScrapingComplete: ", e);
                     CustomMethods.errorAlert(DetailsActivity.this, "Error (Json DT)", e.getMessage(), "OK", true);
                 }
             }
@@ -125,7 +127,22 @@ public class DetailsActivity extends AppCompatActivity {
         scraper.scrapeDetails(animeId, episodeId);
 
         binding.backBtn.setOnClickListener(view -> onBackPressed());
+        binding.backBtn.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                binding.backBtn.setBackgroundResource(R.drawable.button_focused);
+            } else {
+                binding.backBtn.setBackgroundResource(R.drawable.button_default);
+            }
+        });
+
         binding.searchBtn.setOnClickListener(view -> startActivity(new Intent(this, SearchActivity.class)));
+        binding.searchBtn.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                binding.searchBtn.setBackgroundResource(R.drawable.button_focused);
+            } else {
+                binding.searchBtn.setBackgroundResource(R.drawable.button_default);
+            }
+        });
     }
 
 //    ----------------------------------------------------------------------------------------------
@@ -134,7 +151,6 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         if (episodesButtonsAdapter != null) {
             episodesButtonsAdapter.notifyDataSetChanged();
         }

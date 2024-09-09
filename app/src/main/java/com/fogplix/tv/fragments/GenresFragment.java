@@ -46,7 +46,6 @@ public class GenresFragment extends Fragment {
 
     private void initVars(View allViews) {
         colorsArray = getResources().getIntArray(R.array.genre_card_colors);
-
         recyclerView = allViews.findViewById(R.id.recyclerView);
     }
 }

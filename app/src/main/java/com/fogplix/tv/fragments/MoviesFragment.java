@@ -3,6 +3,7 @@ package com.fogplix.tv.fragments;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,9 +72,9 @@ public class MoviesFragment extends Fragment {
 
         binding = FragmentMoviesBinding.inflate(inflater, container, false);
 
-        binding.loadMoreAnimeBtn.setOnFocusChangeListener((view, b) -> {
-            if (b){
-                binding.loadMoreAnimeBtn.setBackgroundColor(activity.getColor(R.color.orange));
+        binding.loadMoreAnimeBtn.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus){
+                binding.loadMoreAnimeBtn.setBackgroundColor(activity.getColor(R.color.red));
             } else {
                 binding.loadMoreAnimeBtn.setBackgroundColor(activity.getColor(R.color.fade_blue));
             }
@@ -134,7 +135,7 @@ public class MoviesFragment extends Fragment {
                         }
 
                     } catch (JSONException e){
-                        e.printStackTrace();
+                        Log.e("MADARA", "onScrapeComplete: ", e);
                         CustomMethods.errorAlert(activity, "Error", e.getMessage(), "OK", false);
                     }
                 }

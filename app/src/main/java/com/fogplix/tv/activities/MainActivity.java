@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
 
         CustomMethods.checkForUpdateOnStartApp(this);
         CustomMethods.checkNewNotice(this, importantNoticeTV);
-        CustomMethods.checkPlayableServersStatus(this);
 
         if (!CustomMethods.isInternetOn(this)) {
             Toast.makeText(this, "No internet connection.", Toast.LENGTH_LONG).show();

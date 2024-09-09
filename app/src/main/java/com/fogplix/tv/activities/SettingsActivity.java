@@ -1,7 +1,6 @@
 package com.fogplix.tv.activities;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.ActionBar;
@@ -26,8 +25,16 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
         }
+        ImageButton backButton = findViewById(R.id.backButton);
 
-        findViewById(R.id.backButton).setOnClickListener(v -> onBackPressed());
+        backButton.setOnClickListener(v -> onBackPressed());
+        backButton.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                backButton.setBackgroundResource(R.drawable.button_focused);
+            } else {
+                backButton.setBackgroundResource(R.drawable.button_default);
+            }
+        });
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

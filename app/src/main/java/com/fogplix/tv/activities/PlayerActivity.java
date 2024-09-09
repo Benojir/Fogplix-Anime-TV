@@ -3,12 +3,14 @@ package com.fogplix.tv.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -20,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,14 +59,19 @@ import androidx.media3.exoplayer.trackselection.ExoTrackSelection;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
 import androidx.media3.ui.AspectRatioFrameLayout;
 import androidx.media3.ui.PlayerView;
+import androidx.preference.PreferenceManager;
 
 import com.fogplix.tv.BuildConfig;
 import com.fogplix.tv.R;
 import com.fogplix.tv.helpers.CustomMethods;
 import com.fogplix.tv.helpers.DoubleClickListener;
+import com.fogplix.tv.helpers.GenerateDirectLink;
 import com.fogplix.tv.helpers.MyDatabaseHandler;
 import com.fogplix.tv.model.LastEpisodeWatchedModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -74,8 +82,13 @@ import java.util.UUID;
 @UnstableApi
 public class PlayerActivity extends AppCompatActivity {
 
+    private static final String TAG = "MADARA";
+    private LinearLayout apiLoadersContainer;
+    private TextView episodeLoadingTV;
+    private RelativeLayout playerComponentsContainer;
     private ProgressBar bufferingProgressBar;
     private PlayerView exoPlayerView;
+    private String refererUrl = "";
     private Uri videoUri2;
     private ExoPlayer exoPlayer;
     private LinearLayout brightnessVolumeContainer;
@@ -87,10 +100,13 @@ public class PlayerActivity extends AppCompatActivity {
     private AudioManager audioManager;
     private final int SHOW_MAX_BRIGHTNESS = 100;
     private final int SHOW_MAX_VOLUME = 50;
-    private ImageButton qualityBtn, backButton, fitScreenBtn, backward10, forward10;
+    private ImageButton qualityBtn, backButton, fitScreenBtn, backward10, forward10, previousEpisode, nextEpisode;
+    private Button skipIntroOutroBtn;
     private TextView videoNameTV, episodeNumTV;
     private String episodeId;
     private String animeTitle;
+    private String nextEpisodeId = "";
+    private String previousEpisodeId = "";
     private DefaultTrackSelector defaultTrackSelector;
     private ArrayList<String> videoQualities;
     private int selectedQualityIndex = 0;
@@ -99,6 +115,7 @@ public class PlayerActivity extends AppCompatActivity {
     private boolean shouldShowController = true;
     private boolean playWhenReady = true;
     private long playbackPosition = C.TIME_UNSET;
+    private SharedPreferences preferences;
 
     private static final CookieManager DEFAULT_COOKIE_MANAGER;
 
@@ -107,7 +124,7 @@ public class PlayerActivity extends AppCompatActivity {
         DEFAULT_COOKIE_MANAGER.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,36 +146,117 @@ public class PlayerActivity extends AppCompatActivity {
         hideSystemUI();
         initVars();
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        MyDatabaseHandler dbHandler = new MyDatabaseHandler(this);
+
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         episodeId = getIntent().getStringExtra("episodeId");
-        animeTitle = getIntent().getStringExtra("animeTitle");
-        String animeId = getIntent().getStringExtra("animeId");
-        String videoHLSUrl = getIntent().getStringExtra("videoHLSUrl");
-        String videoHLSUrl2 = getIntent().getStringExtra("videoHLSUrl2");
 
-        Uri videoUri = Uri.parse(videoHLSUrl);
-        videoUri2 = Uri.parse(videoHLSUrl2);
-
-        initializePlayer(videoUri, false);
-
-        //---------------------------Below code for each tv last episode-------------------------
-
-        LastEpisodeWatchedModel lastEpisodeWatchedModel = new LastEpisodeWatchedModel(animeId, episodeId);
-
-        MyDatabaseHandler dbHandler = new MyDatabaseHandler(this);
-        dbHandler.addLastWatchedEpisode(lastEpisodeWatchedModel);
+        if (episodeId == null) {
+            CustomMethods.errorAlert(this, "Error", "Episode ID is null.", "OK", true);
+            return;
+        }
 
         //------------------------------------------------------------------------------------------
+
+        if (preferences.getBoolean("85s_skipping_button", false)) {
+            skipIntroOutroBtn.setVisibility(View.VISIBLE);
+            skipIntroOutroBtn.setText("Skip 85s");
+        }
+
+        //------------------------------------------------------------------------------------------
+
+        episodeLoadingTV.setText("Loading episode " + CustomMethods.extractEpisodeNumberFromId(episodeId));
+
+        GenerateDirectLink generateDirectLink = new GenerateDirectLink(this);
+
+        generateDirectLink.generate(episodeId, new GenerateDirectLink.OnGenerateDirectLink() {
+            @Override
+            public void onComplete(JSONObject object) {
+                try {
+                    apiLoadersContainer.setVisibility(View.GONE);
+                    playerComponentsContainer.setVisibility(View.VISIBLE);
+
+                    animeTitle = object.getString("animeTitle");
+                    refererUrl = object.getString("referer");
+                    String animeId = object.getString("animeId");
+                    String videoHLSUrl = object.getString("videoHLSUrl");
+                    String videoHLSUrl2 = object.getString("videoHLSUrl2");
+                    previousEpisodeId = object.getString("previousEpisodeId");
+                    nextEpisodeId = object.getString("nextEpisodeId");
+
+                    //-----------Below code for showing/hiding previous and next episode------------
+
+                    if (previousEpisodeId.isEmpty()) {
+                        previousEpisode.setVisibility(View.INVISIBLE);
+                    } else {
+                        previousEpisode.setVisibility(View.VISIBLE);
+                    }
+
+                    if (nextEpisodeId.isEmpty()) {
+                        nextEpisode.setVisibility(View.INVISIBLE);
+                    } else {
+                        nextEpisode.setVisibility(View.VISIBLE);
+                    }
+
+                    //------------------------------------------------------------------------------
+
+                    Uri videoUri = Uri.parse(videoHLSUrl);
+                    videoUri2 = Uri.parse(videoHLSUrl2);
+
+                    initializePlayer(videoUri, false);
+
+                    //--------------------Below code for each anime last episode--------------------
+                    LastEpisodeWatchedModel lastEpisodeWatchedModel = new LastEpisodeWatchedModel(animeId, episodeId);
+                    dbHandler.addLastWatchedEpisode(lastEpisodeWatchedModel);
+
+                } catch (JSONException e) {
+                    CustomMethods.errorAlert(PlayerActivity.this, "Error", e.getMessage(), "OK", true);
+                }
+            }
+
+            @Override
+            public void onFailed(String error) {
+                CustomMethods.errorAlert(PlayerActivity.this, "Error", error, "OK", true);
+            }
+        });
+
+
+        //+++++++++++++++++++++++ Below section is handing button actions ++++++++++++++++++++++++++
+
+        skipIntroOutroBtn.setOnClickListener(v -> {
+            if (preferences.getBoolean("85s_skipping_button", false)) {
+                long currentVideoPosition = exoPlayer.getCurrentPosition();
+                exoPlayer.seekTo(currentVideoPosition + 85000);
+            }
+        });
+
+        previousEpisode.setOnClickListener(v -> {
+            if (!previousEpisodeId.isEmpty()) {
+                Intent intent = new Intent(PlayerActivity.this, PlayerActivity.class);
+                intent.putExtra("episodeId", previousEpisodeId);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        nextEpisode.setOnClickListener(v -> {
+            if (!nextEpisodeId.isEmpty()) {
+                Intent intent = new Intent(PlayerActivity.this, PlayerActivity.class);
+                intent.putExtra("episodeId", nextEpisodeId);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         backward10.setOnClickListener(view -> exoPlayer.seekTo(exoPlayer.getCurrentPosition() - 10000));
         forward10.setOnClickListener(view -> exoPlayer.seekTo(exoPlayer.getCurrentPosition() + 10000));
 
         qualityBtn.setOnClickListener(view -> {
-
             if (videoQualities != null) {
-
-                if (videoQualities.size() > 0) {
+                if (!videoQualities.isEmpty()) {
                     getQualityChooserDialog(this, videoQualities);
                 } else {
                     Toast.makeText(this, "No video quality found.", Toast.LENGTH_SHORT).show();
@@ -169,7 +267,6 @@ public class PlayerActivity extends AppCompatActivity {
         });
 
         fitScreenBtn.setOnClickListener(v -> {
-
             if (exoPlayerView.getResizeMode() == AspectRatioFrameLayout.RESIZE_MODE_FIT) {
                 exoPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
                 fitScreenBtn.setImageResource(R.drawable.crop_5_4);
@@ -187,7 +284,6 @@ public class PlayerActivity extends AppCompatActivity {
         });
 
         backButton.setOnClickListener(view -> {
-
             if (exoPlayer != null) {
                 exoPlayer.stop();
                 exoPlayer.release();
@@ -326,7 +422,7 @@ public class PlayerActivity extends AppCompatActivity {
         setVolumeVariable();
     }
 
-//--------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------
     private void initializePlayer(Uri vUri, boolean isSecondSrc) {
 
         ExoTrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory();
@@ -381,17 +477,30 @@ public class PlayerActivity extends AppCompatActivity {
                 if (playbackState == Player.STATE_BUFFERING) {
                     bufferingProgressBar.setVisibility(View.VISIBLE);
                 }
+
                 if (playbackState == Player.STATE_READY) {
+                    if (preferences.getBoolean("85s_skipping_button", false)) {
+                        skipIntroOutroBtn.setVisibility(View.VISIBLE);
+                    }
 
                     exoPlayerView.setVisibility(View.VISIBLE);
-
                     bufferingProgressBar.setVisibility(View.GONE);
-
                     videoNameTV.setText(animeTitle.trim());
-
                     episodeNumTV.setText("Episode " + CustomMethods.extractEpisodeNumberFromId(episodeId));
-
                     videoQualities = getVideoQualitiesTracks();
+                }
+
+                if (playbackState == Player.STATE_ENDED) {
+                    skipIntroOutroBtn.setVisibility(View.GONE);
+
+                    if (preferences.getBoolean("auto_play_next_episode", false)) {
+                        if (!nextEpisodeId.isEmpty()) {
+                            Intent intent = new Intent(PlayerActivity.this, PlayerActivity.class);
+                            intent.putExtra("episodeId", nextEpisodeId);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
                 }
             }
 
@@ -408,7 +517,26 @@ public class PlayerActivity extends AppCompatActivity {
                     alertBuilder.setMessage(getString(R.string.episode_playing_failed_message) + error.getErrorCodeName() + " " + error.getMessage());
                     alertBuilder.setCancelable(false);
 
-                    alertBuilder.setPositiveButton("Exit", (dialog, which) -> finish());
+                    alertBuilder.setPositiveButton("Try Web Version", (dialog, which) -> {
+                        if (refererUrl.isEmpty()) {
+                            Toast.makeText(PlayerActivity.this, "Cannot play this video.", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(refererUrl));
+
+                            if (intent.resolveActivity(getPackageManager()) != null) {
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(PlayerActivity.this, "Cannot play this video.", Toast.LENGTH_SHORT).show();
+                                onBackPressed();
+                            }
+
+                            new Handler().postDelayed(() -> finish(), 2000);
+                        }
+                    });
+
+                    alertBuilder.setNeutralButton("Exit", (dialog, which) -> finish());
 
                     alertBuilder.setNegativeButton("Report Us", (dialog, which) -> {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + getString(R.string.feedback_email) + "?subject=" + getString(R.string.app_name) + " Playing Error v" + BuildConfig.VERSION_NAME + "&body=" + error.getMessage() + "\n" + error.getErrorCodeName() + "\n" + episodeId + "\n" + vUri)));
@@ -502,6 +630,7 @@ public class PlayerActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
+
     //--------------------------------------------------------------------------------------------------
     private void getQualityChooserDialog(Context context, ArrayList<String> arrayList) {
 
@@ -515,7 +644,7 @@ public class PlayerActivity extends AppCompatActivity {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         builder.setTitle("Select video quality:");
         builder.setSingleChoiceItems(charSequences, selectedQualityIndex, (dialogInterface, which) -> selectedQualityIndex = which);
-        builder.setPositiveButton("Ok", (dialogInterface, i) -> {
+        builder.setPositiveButton("OK", (dialogInterface, i) -> {
 
             if (selectedQualityIndex == 0) {
                 Toast.makeText(context, context.getText(R.string.app_name) + " will choose video resolution automatically.", Toast.LENGTH_SHORT).show();
@@ -617,7 +746,7 @@ public class PlayerActivity extends AppCompatActivity {
                     Settings.System.SCREEN_BRIGHTNESS
             );
         } catch (Settings.SettingNotFoundException e) {
-            e.printStackTrace();
+            Log.e(TAG, "getCurrentScreenBrightness: ", e);
         }
 
         // Get the maximum brightness value supported by the device's screen
@@ -711,10 +840,10 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
         exoPlayer.stop();
         exoPlayer.release();
+        super.onBackPressed();
+        finish();
     }
 
     @Override
@@ -730,6 +859,9 @@ public class PlayerActivity extends AppCompatActivity {
     private void initVars() {
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
+        apiLoadersContainer = findViewById(R.id.apiLoadersContainer);
+        episodeLoadingTV = findViewById(R.id.episodeLoadingTV);
+        playerComponentsContainer = findViewById(R.id.playerComponentsContainer);
         bufferingProgressBar = findViewById(R.id.bufferingProgressBar);
         exoPlayerView = findViewById(R.id.exoPlayerView);
         brightnessVolumeContainer = findViewById(R.id.brightness_volume_container);
@@ -738,6 +870,7 @@ public class PlayerActivity extends AppCompatActivity {
         brightVolumeTV = findViewById(R.id.brightness_volume_tv);
         qualityBtn = exoPlayerView.findViewById(R.id.quality_selection_btn);
         fitScreenBtn = exoPlayerView.findViewById(R.id.fit_screen_btn);
+        skipIntroOutroBtn = exoPlayerView.findViewById(R.id.skipIntroOutroBtn);
         videoNameTV = exoPlayerView.findViewById(R.id.animeNameTV);
         episodeNumTV = exoPlayerView.findViewById(R.id.episodeNumTV);
         backButton = exoPlayerView.findViewById(R.id.backButton);
@@ -745,9 +878,12 @@ public class PlayerActivity extends AppCompatActivity {
         doubleTapSkipForwardIcon = findViewById(R.id.doubleTapSkipForwardIcon);
         backward10 = findViewById(R.id.backward_10);
         forward10 = findViewById(R.id.forward_10);
+        previousEpisode = findViewById(R.id.previous_episode);
+        nextEpisode = findViewById(R.id.next_episode);
 
         doubleTapSkipBackIcon.setVisibility(View.GONE);
         doubleTapSkipForwardIcon.setVisibility(View.GONE);
     }
-    //--------------------------------------------------------------------------------------------------
+
+    //----------------------------------------------------------------------------------------------
 }

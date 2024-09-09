@@ -183,7 +183,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
     }
 //--------------------------------------------------------------------------------------------------
 
-    public List<AnimeFavoriteListModel> getAllFavoriteAnime(){
+    public void getAllFavoriteAnime(OnRetrievedAllAnimeListener listener) {
 
         List<AnimeFavoriteListModel> favoriteListModelList = new ArrayList<>();
 
@@ -192,7 +192,7 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 AnimeFavoriteListModel favoriteAnimeModel = new AnimeFavoriteListModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
                 favoriteListModelList.add(favoriteAnimeModel);
@@ -201,6 +201,13 @@ public class MyDatabaseHandler extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        return favoriteListModelList;
+
+        listener.onComplete(favoriteListModelList);
+    }
+
+//    ----------------------------------------------------------------------------------------------
+
+    public interface OnRetrievedAllAnimeListener {
+        void onComplete(List<AnimeFavoriteListModel> allFavoriteAnime);
     }
 }

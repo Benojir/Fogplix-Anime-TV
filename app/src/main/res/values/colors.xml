@@ -15,10 +15,11 @@
     <color name="fade_black">#111111</color>
     <color name="fade_white">#E0DEDE</color>
     <color name="light_red">#EF3977</color>
+    <color name="dark_yellow">#FFC107</color>
+    <color name="dark_grey">#181818</color>
 
     <color name="hp_theme_color">#000000</color>
     <color name="background_color">#000000</color>
-
 
     <color name="genre_card_1">#0F31F3</color>
     <color name="genre_card_2">#610606</color>

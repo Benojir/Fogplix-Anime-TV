@@ -1,12 +1,9 @@
 package com.fogplix.tv.helpers;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,16 +12,20 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
 
 import com.fogplix.tv.BuildConfig;
 import com.fogplix.tv.R;
+import com.fogplix.tv.dialogs.MyProgressDialog;
 import com.fogplix.tv.params.Statics;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +41,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Objects;
@@ -53,55 +53,16 @@ public class CustomMethods {
 
     private static final String TAG = "MADARA";
 
-    public static String timeFormatterFromSeconds(int seconds) {
-        return LocalTime.ofSecondOfDay(seconds) + "";
-    }
-
-    //----------------------------------------------------------------------------------------------
     public static String getDateTime(){
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy_hhmmss");
 
         return formatter.format(now);
     }
-    //----------------------------------------------------------------------------------------------
+
     public static String extractEpisodeNumberFromId(String episodeId) {
         String[] parts = episodeId.split("-");
         return parts[parts.length - 1];
-    }
-//--------------------------------------------------------------------------------------------------
-
-    public static String getVersionName(Context context) {
-        PackageInfo packageInfo;
-        try {
-            packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return packageInfo.versionName;
-    }
-
-    public static int getVersionCode(Context context) {
-        PackageInfo packageInfo;
-        try {
-            packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return packageInfo.versionCode;
-    }
-//--------------------------------------------------------------------------------------------------
-
-    public static JSONArray mergeMultiJsonArray(JSONArray... arrays) {
-
-        JSONArray outArray = new JSONArray();
-
-        for (JSONArray array : arrays) {
-            for (int i = 0; i < array.length(); i++) {
-                outArray.put(array.optJSONObject(i));
-            }
-        }
-        return outArray;
     }
 
     public static void mergeTwoJsonArray(JSONArray oldArray, JSONArray newArray) throws JSONException {
@@ -111,7 +72,21 @@ public class CustomMethods {
         }
     }
 
-    //--------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public static void showKeyboard(Activity activity, EditText editText) {
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+    }
+    //----------------------------------------------------------------------------------------------
 
     public static String capitalize(String sentence) {
         if (sentence == null){
@@ -146,12 +121,11 @@ public class CustomMethods {
 
     //--------------------------------------------------------------------------------------------------
     public static void errorAlert(Activity activity, String errorTitle, String errorBody, String actionButton, boolean shouldGoBack) {
-
         if (!activity.isFinishing()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle(errorTitle);
             builder.setMessage(errorBody);
-            builder.setIcon(R.drawable.warning);
+            builder.setIcon(R.drawable.error_outline_24);
             builder.setPositiveButton(actionButton, (dialogInterface, i) -> {
                 if (shouldGoBack) {
                     activity.finish();
@@ -160,58 +134,42 @@ public class CustomMethods {
                 }
             });
             builder.setNegativeButton("Report", (dialog, which) -> {
-                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + activity.getString(R.string.feedback_email) + "?subject= FogPlix Error v" + BuildConfig.VERSION_NAME + "&body=" + errorBody)));
+                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + activity.getString(R.string.feedback_email) + "?subject= Fogplix Anime Error v" + BuildConfig.VERSION_NAME + "&body=" + errorBody)));
                 activity.finish();
             });
             AlertDialog dialog = builder.create();
             dialog.show();
         }
     }
-//--------------------------------------------------------------------------------------------------
 
-    public static void showKeyBoard(Activity activity, EditText editText) {
-        if (editText.requestFocus()) {
-            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
-            }
-            activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+    public static void warningAlert(Activity activity, String warningTitle, String warningBody, String actionButton, boolean shouldGoBack) {
+        if (!activity.isFinishing()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle(warningTitle);
+            builder.setMessage(warningBody);
+            builder.setIcon(R.drawable.warning);
+            builder.setPositiveButton(actionButton, (dialogInterface, i) -> {
+                if (shouldGoBack) {
+                    activity.finish();
+                } else {
+                    dialogInterface.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 
-    public static void hideKeyboard(Context context, View view) {
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+//--------------------------------------------------------------------------------------------------
 
-    //--------------------------------------------------------------------------------------------------
-    public static void checkPlayableServersStatus(Context context) {
-
-        new Thread(() -> {
-
-            try {
-                String playableServers =
-                        Jsoup
-                                .connect(context.getString(R.string.playable_servers_status_json_link))
-                                .timeout(30000)
-                                .ignoreContentType(true)
-                                .execute().body();
-
-                if (!playableServers.equalsIgnoreCase("")) {
-
-                    JSONObject object = new JSONObject(playableServers);
-
-                    boolean server_1 = object.getBoolean("server-1");
-                    boolean server_2 = object.getBoolean("server-2");
-                    boolean server_3 = object.getBoolean("server-3");
-
-                    HPSharedPreference hpSharedPreference = new HPSharedPreference(context);
-                    hpSharedPreference.savePlayableServersStatus(server_1, server_2, server_3);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "checkPlayableServersStatus: ", e);
-            }
-        }).start();
+    public static boolean isAppInstalledOrNot(Context context, String packageName) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 //--------------------------------------------------------------------------------------------------
@@ -265,7 +223,82 @@ public class CustomMethods {
     }
 //--------------------------------------------------------------------------------------------------
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+    public static void chooseDownloadOptions(Activity activity, String refererUrl, String videoHLSUrl) {
+
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetDialog);
+        bottomSheetDialog.setCancelable(true);
+        bottomSheetDialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+        bottomSheetDialog.setContentView(R.layout.sample_download_option_bottomsheet_layout);
+
+        CardView option1 = bottomSheetDialog.findViewById(R.id.download_option_1);
+        CardView option2 = bottomSheetDialog.findViewById(R.id.download_option_2);
+
+        if (option1 != null) {
+
+            option1.setOnClickListener(view1 -> {
+
+                if (!refererUrl.isEmpty()) {
+
+                    try {
+                        URL url = new URL(refererUrl);
+
+                        String protocol = url.getProtocol();
+                        String host = url.getHost();
+                        String newPath = "/download";
+                        String query = url.getQuery();
+
+                        String downloadUrl = protocol + "://" + host + newPath + "?" + query;
+
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl));
+                        activity.startActivity(intent);
+
+                        bottomSheetDialog.dismiss();
+                    } catch (Exception e) {
+                        Log.e(TAG, "choosePlayOrDownload: ", e);
+                        Toast.makeText(activity, "Cannot parse download url. Please choose option 2.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(activity, "Option 1 will not work. Try option 2", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        //======================================================================================
+
+        if (option2 != null) {
+
+            option2.setOnClickListener(view1 -> {
+
+                String idmPackageName = "idm.internet.download.manager";
+
+                if (CustomMethods.isAppInstalledOrNot(activity, idmPackageName)) {
+
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoHLSUrl));
+                        //intent.setClassName("idm.internet.download.manager", "idm.internet.download.manager.MainActivity");
+                        intent.setPackage("idm.internet.download.manager");
+                        activity.startActivity(intent);
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "choosePlayOrDownload: ", e);
+                        CustomMethods.errorAlert(activity, "Error", e.getMessage(), "OK", false);
+                    }
+                } else {
+                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(activity);
+                    builder.setTitle("1DM required");
+                    builder.setMessage("1DM is not installed in your device. Install 1DM first to download this episode.");
+                    builder.setPositiveButton("Install", (dialog1, which) -> activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=idm.internet.download.manager"))));
+                    builder.create().show();
+                }
+
+                bottomSheetDialog.dismiss();
+            });
+        }
+
+        bottomSheetDialog.show();
+    }
+//--------------------------------------------------------------------------------------------------
+
     public static void checkForUpdateOnStartApp(Activity activity) {
 
         int currentVersionCode = BuildConfig.VERSION_CODE;
@@ -312,9 +345,12 @@ public class CustomMethods {
                                 builder.setPositiveButton("Update", (dialogInterface, i) -> {
                                     dialogInterface.dismiss();
 
-                                    String downloadPath = Objects.requireNonNull(activity.getExternalFilesDir(null)) + "/fogplix_v" + versionName + "_t" + getDateTime() + ".apk";
+                                    // Delete previous APK files
+                                    deleteOldApkFiles(activity);
 
-                                    ProgressDialog pd = new ProgressDialog(activity);
+                                    String downloadPath = Objects.requireNonNull(activity.getExternalFilesDir(null)) + "/Fogplix-Anime_v" + versionName + "_t" + getDateTime() + ".apk";
+
+                                    MyProgressDialog pd = new MyProgressDialog(activity);
                                     pd.setCancelable(false);
                                     pd.setMessage("Don't close the app. \nDownloading 0%");
                                     pd.show();
@@ -372,6 +408,30 @@ public class CustomMethods {
         }).start();
     }
 
+    public static void deleteOldApkFiles(Activity activity) {
+        // Get the folder where APK files are stored
+        File apkDir = activity.getExternalFilesDir(null);
+
+        if (apkDir != null && apkDir.isDirectory()) {
+            // List all files in the directory
+            File[] files = apkDir.listFiles();
+
+            if (files != null) {
+                for (File file : files) {
+                    // Check if the file is an APK and delete it
+                    if (file.getName().endsWith(".apk")) {
+                        if (file.delete()) {
+                            Log.d(TAG, "Deleted old APK: " + file.getName());
+                        } else {
+                            Log.e(TAG, "Failed to delete old APK: " + file.getName());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     private static void installApk(Activity activity, String filePath) {
 
         File file = new File(filePath);
@@ -427,7 +487,6 @@ public class CustomMethods {
 
         String token = decryptStringAES(encryptedToken, Statics.firstKey, Statics.iv);
 
-//        return "id=" + encryptedId + "&alias=" + token;
         return "id=" + encryptedId + "&alias=" + id + "&" + token;
     }
 
@@ -452,6 +511,4 @@ public class CustomMethods {
         }
         return query.substring(startIndex, endIndex);
     }
-
-
 }

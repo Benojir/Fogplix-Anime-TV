@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/dark_grey"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/red"
+        style="?android:attr/progressBarStyleLarge" />
+
+    <TextView
+        android:id="@+id/progressTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select one Select one Select one"
+        android:maxLines="2"
+        android:textSize="18sp"
+        android:paddingVertical="10dp"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>

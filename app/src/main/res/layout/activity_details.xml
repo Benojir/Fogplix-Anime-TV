@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,6 +15,7 @@
         android:gravity="center">
 
         <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminateTint="@color/red" />
@@ -40,24 +40,28 @@
 
                 <ImageButton
                     android:id="@+id/backBtn"
-                    style="@style/ExoStyledControls.Button.Bottom.RepeatToggle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentStart="true"
                     android:layout_margin="15dp"
+                    android:background="@drawable/round_transparent_ripple_button"
                     android:contentDescription="Back"
+                    android:padding="12dp"
+                    android:scaleType="centerInside"
                     android:src="@drawable/arrow_back_48" />
 
                 <TextView
                     android:id="@+id/animeTitleTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_toStartOf="@+id/searchBtn"
+                    android:layout_toEndOf="@+id/backBtn"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:lines="2"
                     android:maxLines="2"
                     android:paddingHorizontal="20dp"
-                    android:layout_centerInParent="true"
-                    android:layout_toEndOf="@+id/backBtn"
-                    android:layout_toStartOf="@+id/searchBtn"
                     android:text="Anime Title"
                     android:textColor="?attr/text_color"
                     android:textSize="19sp"
@@ -65,10 +69,14 @@
 
                 <ImageButton
                     android:id="@+id/searchBtn"
-                    style="@style/ExoStyledControls.Button.Bottom.RepeatToggle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentEnd="true"
                     android:layout_margin="15dp"
+                    android:background="@drawable/round_transparent_ripple_button"
                     android:contentDescription="Search"
+                    android:padding="12dp"
+                    android:scaleType="centerInside"
                     android:src="@drawable/search_24" />
             </RelativeLayout>
 
@@ -82,19 +90,19 @@
                     android:id="@+id/thumbnailImageView"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="30dp"
                     android:adjustViewBounds="true"
                     android:maxHeight="600dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/preload_thumb"
-                    tools:ignore="ImageContrastCheck"
-                    android:layout_marginStart="30dp"
-                    android:layout_alignParentStart="true"/>
+                    tools:ignore="ImageContrastCheck" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/thumbnailImageView"
                     android:layout_marginHorizontal="30dp"
+                    android:layout_toEndOf="@+id/thumbnailImageView"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -210,8 +218,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginVertical="5dp">
+                        android:layout_marginVertical="5dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -238,8 +246,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginVertical="10dp">
+                        android:layout_marginVertical="10dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -257,8 +265,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="10dp"
-                            android:maxLines="4"
                             android:ellipsize="end"
+                            android:maxLines="4"
                             android:text="@string/temporary_synopsis"
                             android:textColor="@color/fade_white"
                             android:textSize="16sp" />
@@ -269,14 +277,12 @@
 
             </RelativeLayout>
 
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageAndInfoContainer"
-                android:padding="10dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:padding="10dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/episodesBtnRecyclerView"
