@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -15,17 +14,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
 
 import com.fogplix.tv.BuildConfig;
 import com.fogplix.tv.R;
 import com.fogplix.tv.dialogs.MyProgressDialog;
 import com.fogplix.tv.params.Statics;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -162,18 +157,6 @@ public class CustomMethods {
 
 //--------------------------------------------------------------------------------------------------
 
-    public static boolean isAppInstalledOrNot(Context context, String packageName) {
-        PackageManager pm = context.getPackageManager();
-        try {
-            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-//--------------------------------------------------------------------------------------------------
-
     public static void checkNewNotice(Context context, TextView textView) {
 
         int currentVersionCode = BuildConfig.VERSION_CODE;
@@ -182,8 +165,7 @@ public class CustomMethods {
 
             try {
                 String newNoticeJSON =
-                        Jsoup
-                                .connect(context.getString(R.string.new_notice_json_link))
+                        Jsoup.connect(context.getString(R.string.new_notice_json_link))
                                 .timeout(30000)
                                 .ignoreContentType(true)
                                 .execute().body();
@@ -220,82 +202,6 @@ public class CustomMethods {
                 Log.e(TAG, "checkNewNotice: ", e);
             }
         }).start();
-    }
-//--------------------------------------------------------------------------------------------------
-
-    public static void chooseDownloadOptions(Activity activity, String refererUrl, String videoHLSUrl) {
-
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetDialog);
-        bottomSheetDialog.setCancelable(true);
-        bottomSheetDialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
-        bottomSheetDialog.setContentView(R.layout.sample_download_option_bottomsheet_layout);
-
-        CardView option1 = bottomSheetDialog.findViewById(R.id.download_option_1);
-        CardView option2 = bottomSheetDialog.findViewById(R.id.download_option_2);
-
-        if (option1 != null) {
-
-            option1.setOnClickListener(view1 -> {
-
-                if (!refererUrl.isEmpty()) {
-
-                    try {
-                        URL url = new URL(refererUrl);
-
-                        String protocol = url.getProtocol();
-                        String host = url.getHost();
-                        String newPath = "/download";
-                        String query = url.getQuery();
-
-                        String downloadUrl = protocol + "://" + host + newPath + "?" + query;
-
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl));
-                        activity.startActivity(intent);
-
-                        bottomSheetDialog.dismiss();
-                    } catch (Exception e) {
-                        Log.e(TAG, "choosePlayOrDownload: ", e);
-                        Toast.makeText(activity, "Cannot parse download url. Please choose option 2.", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(activity, "Option 1 will not work. Try option 2", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        //======================================================================================
-
-        if (option2 != null) {
-
-            option2.setOnClickListener(view1 -> {
-
-                String idmPackageName = "idm.internet.download.manager";
-
-                if (CustomMethods.isAppInstalledOrNot(activity, idmPackageName)) {
-
-                    try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoHLSUrl));
-                        //intent.setClassName("idm.internet.download.manager", "idm.internet.download.manager.MainActivity");
-                        intent.setPackage("idm.internet.download.manager");
-                        activity.startActivity(intent);
-
-                    } catch (Exception e) {
-                        Log.e(TAG, "choosePlayOrDownload: ", e);
-                        CustomMethods.errorAlert(activity, "Error", e.getMessage(), "OK", false);
-                    }
-                } else {
-                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(activity);
-                    builder.setTitle("1DM required");
-                    builder.setMessage("1DM is not installed in your device. Install 1DM first to download this episode.");
-                    builder.setPositiveButton("Install", (dialog1, which) -> activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=idm.internet.download.manager"))));
-                    builder.create().show();
-                }
-
-                bottomSheetDialog.dismiss();
-            });
-        }
-
-        bottomSheetDialog.show();
     }
 //--------------------------------------------------------------------------------------------------
 
@@ -408,27 +314,31 @@ public class CustomMethods {
         }).start();
     }
 
-    public static void deleteOldApkFiles(Activity activity) {
-        // Get the folder where APK files are stored
-        File apkDir = activity.getExternalFilesDir(null);
+    private static void deleteOldApkFiles(Activity activity) {
+        new Thread(() -> {
+            // Get the folder where APK files are stored
+            File apkDir = activity.getExternalFilesDir(null);
 
-        if (apkDir != null && apkDir.isDirectory()) {
-            // List all files in the directory
-            File[] files = apkDir.listFiles();
+            if (apkDir != null && apkDir.isDirectory()) {
+                // List all files in the directory
+                File[] files = apkDir.listFiles();
 
-            if (files != null) {
-                for (File file : files) {
-                    // Check if the file is an APK and delete it
-                    if (file.getName().endsWith(".apk")) {
-                        if (file.delete()) {
-                            Log.d(TAG, "Deleted old APK: " + file.getName());
-                        } else {
-                            Log.e(TAG, "Failed to delete old APK: " + file.getName());
+                if (files != null) {
+                    for (File file : files) {
+                        if (file.exists() && file.isFile()) {
+                            // Check if the file is an APK and delete it
+                            if (file.getName().endsWith(".apk")) {
+                                if (file.delete()) {
+                                    Log.d(TAG, "Deleted old APK: " + file.getName());
+                                } else {
+                                    Log.e(TAG, "Failed to delete old APK: " + file.getName());
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
+        }).start();
     }
 
 
