@@ -23,8 +23,8 @@
     <string name="playable_servers_status_json_link">https://app.foganime.com/updates/playable-servers-status.json</string>
 
     <string name="official_website">https://app.foganime.com</string>
-    <string name="official_telegram_channel">https://telegram.me/FogPlix</string>
-    <string name="official_telegram_group">https://telegram.me/FogPlixGroup</string>
+    <string name="official_telegram_channel">https://telegram.me/Fogplix</string>
+    <string name="official_telegram_group">https://telegram.me/FogplixGroup</string>
     <string name="more_apps">https://app.foganime.com/more-apps.html</string>
 
     <string name="consumet_streaming_link_api">https://api.consumet.org/anime/gogoanime/watch/</string>
