@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <!-- The background shape with stroke -->
+        <shape android:shape="rectangle">
+            <corners
+                android:bottomLeftRadius="15dp"
+                android:bottomRightRadius="15dp"
+                android:topLeftRadius="15dp"
+                android:topRightRadius="15dp" />
+            <stroke
+                android:width="3dp"
+                android:color="@color/red" />
+        </shape>
+    </item>
+
+    <item>
+        <!-- The ripple effect on top of the shape -->
+        <ripple android:color="?android:attr/colorControlHighlight" />
+    </item>
+</layer-list>

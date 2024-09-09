@@ -13,10 +13,12 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" tools:node="remove"/>
+    <uses-permission
+        android:name="android.permission.ACCESS_WIFI_STATE"
+        tools:node="remove" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -30,22 +32,26 @@
     </queries>
 
     <application
+        android:name=".others.ApplicationClass"
         android:allowBackup="true"
+        android:banner="@drawable/tv_logo"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:preserveLegacyExternalStorage="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.Fogplix"
         android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true"
-        android:preserveLegacyExternalStorage="true"
-        tools:targetApi="31"
-        android:name="com.fogplix.tv.others.ApplicationClass"
-        android:banner="@drawable/tv_logo">
+        tools:targetApi="31">
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -58,23 +64,7 @@
         </provider>
 
         <activity
-            android:name="com.fogplix.tv.activities.FavoriteActivity"
-            android:exported="true"
-            android:configChanges="orientation|uiMode|screenSize|keyboardHidden">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name="com.fogplix.tv.activities.GenreViewActivity"
-            android:exported="false"
-            android:configChanges="orientation|uiMode|screenSize|keyboardHidden">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name="com.fogplix.tv.activities.SearchActivity"
+            android:name=".activities.FavoriteActivity"
             android:configChanges="orientation|uiMode|screenSize|keyboardHidden"
             android:exported="true">
             <meta-data
@@ -82,14 +72,29 @@
                 android:value="" />
         </activity>
         <activity
-            android:name="com.fogplix.tv.activities.PlayerActivity"
+            android:name=".activities.GenreViewActivity"
+            android:configChanges="orientation|uiMode|screenSize|keyboardHidden"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activities.SearchActivity"
+            android:configChanges="orientation|uiMode|screenSize|keyboardHidden"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activities.PlayerActivity"
             android:configChanges="orientation|uiMode|screenSize|keyboardHidden"
             android:exported="false"
             android:hardwareAccelerated="true"
-            android:screenOrientation="sensorLandscape">
-        </activity>
+            android:screenOrientation="sensorLandscape"></activity>
         <activity
-            android:name="com.fogplix.tv.activities.DetailsActivity"
+            android:name=".activities.DetailsActivity"
             android:configChanges="uiMode|orientation|screenSize"
             android:exported="false">
             <meta-data
@@ -97,7 +102,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name="com.fogplix.tv.activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:configChanges="orientation|uiMode|screenSize|keyboardHidden"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">
@@ -110,8 +115,8 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
-            <meta-data android:name="android.app.shortcuts"
+            <meta-data
+                android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
     </application>

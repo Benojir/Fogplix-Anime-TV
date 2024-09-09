@@ -1,9 +1,12 @@
 package com.fogplix.tv.helpers;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import com.fogplix.tv.R;
 import com.fogplix.tv.callbacks.AnimeScraperCallback;
@@ -18,6 +21,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Objects;
 
 public class Scraper {
@@ -26,20 +31,32 @@ public class Scraper {
     private RecentScraperCallback recentScraperCallback = null;
     private DetailsScraperCallback detailsScraperCallback = null;
     private AnimeScraperCallback animeScraperCallback = null;
+    private final SharedPreferences sharedPreferences;
+    private final boolean isProxyEnabled;
+    private final String proxyBrowserLink;
 
     public Scraper(Activity activity, RecentScraperCallback recentScraperCallback) {
         this.activity = activity;
         this.recentScraperCallback = recentScraperCallback;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        isProxyEnabled = sharedPreferences.getBoolean("use_proxy", false);
+        proxyBrowserLink = activity.getString(R.string.proxy_browser_link);
     }
 
     public Scraper(Activity activity, DetailsScraperCallback detailsScraperCallback) {
         this.activity = activity;
         this.detailsScraperCallback = detailsScraperCallback;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        isProxyEnabled = sharedPreferences.getBoolean("use_proxy", false);
+        proxyBrowserLink = activity.getString(R.string.proxy_browser_link);
     }
 
     public Scraper(Activity activity, AnimeScraperCallback animeScraperCallback) {
         this.activity = activity;
         this.animeScraperCallback = animeScraperCallback;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        isProxyEnabled = sharedPreferences.getBoolean("use_proxy", false);
+        proxyBrowserLink = activity.getString(R.string.proxy_browser_link);
     }
 
     public void scrapeRecent(int page, int type) {
@@ -79,10 +96,10 @@ public class Scraper {
 
                     animeImg = Objects.requireNonNull(allListTag.select("img").first()).attr("src").trim();
 
-                    if (document.getElementsByClass("ic-DUB").size() > 0) {
+                    if (!document.getElementsByClass("ic-DUB").isEmpty()) {
                         subOrDub = "DUB";
                     }
-                    if (document.getElementsByClass("ic-SUB").size() > 0) {
+                    if (!document.getElementsByClass("ic-SUB").isEmpty()) {
                         subOrDub = "SUB";
                     }
 
@@ -103,21 +120,27 @@ public class Scraper {
                 new Handler(Looper.getMainLooper()).post(() -> recentScraperCallback.onScrapeComplete(allAnime));
 
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
                 new Handler(Looper.getMainLooper()).post(() -> recentScraperCallback.onScrapeFailed(e.getMessage()));
             }
         }).start();
     }
 
 
-    public void scrapeAnime(String url){
+    public void scrapeAnime(String url) {
 
         new Thread(() -> {
 
             try {
                 JSONArray allAnime = new JSONArray();
 
-                Document document = Jsoup.connect(url)
+                String finalUrl = url;
+
+                if (isProxyEnabled){
+                    finalUrl = proxyBrowserLink + URLEncoder.encode(finalUrl, "UTF-8");
+                }
+
+                Document document = Jsoup.connect(finalUrl)
                         .userAgent(activity.getString(R.string.user_agent))
                         .get();
 
@@ -130,7 +153,7 @@ public class Scraper {
                     String animeRelease = liTag.select(".released").text().toLowerCase();
                     animeRelease = animeRelease.replace("released:", "").trim();
                     String animeId = Objects.requireNonNull(liTag.select("a").first()).attr("href").trim();
-                    animeId = animeId.replace("/category/","");
+                    animeId = animeId.replace("/category/", "");
                     String episodeId = animeId + "-episode-1";
 
                     JSONObject object = new JSONObject();
@@ -145,8 +168,8 @@ public class Scraper {
 
                 new Handler(Looper.getMainLooper()).post(() -> animeScraperCallback.onScrapeComplete(allAnime));
 
-            } catch (Exception e){
-                e.printStackTrace();
+            } catch (Exception e) {
+//                e.printStackTrace();
                 new Handler(Looper.getMainLooper()).post(() -> animeScraperCallback.onScrapeFailed(e.getMessage()));
             }
         }).start();
@@ -158,15 +181,23 @@ public class Scraper {
 
             String episodeId2;
 
-            if (episodeID == null || episodeID.isEmpty()){
+            if (episodeID == null || episodeID.isEmpty()) {
                 episodeId2 = animeId + "-episode-1";
-            } else{
+            } else {
                 episodeId2 = episodeID;
             }
 
             Document document;
             Connection.Response response;
             String detailsUrl = activity.getString(R.string.gogoanime_url) + "/category/" + animeId;
+
+            if (isProxyEnabled){
+                try {
+                    detailsUrl = proxyBrowserLink + URLEncoder.encode(detailsUrl, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    detailsUrl = proxyBrowserLink + detailsUrl;
+                }
+            }
 
             try {
                 response = Jsoup.connect(detailsUrl)
@@ -178,13 +209,21 @@ public class Scraper {
 
                 String episodePageUrl = activity.getString(R.string.gogoanime_url) + "/" + episodeId2;
 
+                if (isProxyEnabled){
+                    try {
+                        episodePageUrl = proxyBrowserLink + URLEncoder.encode(episodePageUrl, "UTF-8");
+                    } catch (UnsupportedEncodingException ex) {
+                        episodePageUrl = proxyBrowserLink + episodePageUrl;
+                    }
+                }
+
                 try {
                     Document episodePageDoc = Jsoup.connect(episodePageUrl)
                             .userAgent(activity.getString(R.string.user_agent))
                             .header("Accept-Language", "en-GB,en;q=0.5")
                             .get();
 
-                    Element animeIdContainerDiv = episodePageDoc.getElementsByClass("tv-info").first();
+                    Element animeIdContainerDiv = episodePageDoc.getElementsByClass("anime-info").first();
 
                     assert animeIdContainerDiv != null;
                     Element aTag = animeIdContainerDiv.getElementsByTag("a").first();
@@ -198,7 +237,7 @@ public class Scraper {
                             .execute();
 
                 } catch (Exception ex) {
-                    Log.d("Uchiha", "onCreate ex: " + ex.getMessage());
+                    Log.e("MADARA", "scrapeDetails: ", ex);
                     response = null;
                 }
             }
@@ -233,7 +272,7 @@ public class Scraper {
 
                     JSONArray episodesArray = new JSONArray();
 
-                    for (Element liTag: liTags) {
+                    for (Element liTag : liTags) {
 
                         String episodeId = Objects.requireNonNull(liTag.select("a").first()).attr("href").replace("/", "").trim();
                         String episodeNum = CustomMethods.extractEpisodeNumberFromId(episodeId);
@@ -258,6 +297,7 @@ public class Scraper {
                     String status = "";
                     String synopsis = innerHtml.select("div.description").text();
 
+
                     JSONArray genresArray = new JSONArray();
 
                     Elements allPTags = innerHtml.select(".type");
@@ -271,6 +311,7 @@ public class Scraper {
                         if (spanTagValue.toLowerCase().contains("type")) {
                             type = pTagDoc.text().replace(spanTagValue, "").trim();
                         }
+
                         if (spanTagValue.toLowerCase().contains("genre")) {
 
                             Elements genres = pTagDoc.getElementsByTag("a");
@@ -297,10 +338,10 @@ public class Scraper {
                     animeInfoJObj.put("totalEpisodes", lastEpisode);
                     animeInfoJObj.put("episodesList", episodesArray);
 
-                    new Handler(Looper.getMainLooper()).post(()->detailsScraperCallback.onScrapingComplete(animeInfoJObj));
+                    new Handler(Looper.getMainLooper()).post(() -> detailsScraperCallback.onScrapingComplete(animeInfoJObj));
                 }
-            } catch (Exception e){
-                new Handler(Looper.getMainLooper()).post(()->detailsScraperCallback.onScrapingFailed(e.getMessage()));
+            } catch (Exception e) {
+                new Handler(Looper.getMainLooper()).post(() -> detailsScraperCallback.onScrapingFailed(e.getMessage()));
             }
         }).start();
     }

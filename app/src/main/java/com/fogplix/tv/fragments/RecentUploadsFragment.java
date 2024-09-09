@@ -3,6 +3,7 @@ package com.fogplix.tv.fragments;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.fogplix.tv.helpers.Scraper;
 import org.json.JSONArray;
 
 public class RecentUploadsFragment extends Fragment {
+    private static final String TAG = "MADARA";
     private FragmentRecentUploadsBinding binding;
     private Activity activity;
     private GridLayoutManager layoutManager;
@@ -75,9 +77,9 @@ public class RecentUploadsFragment extends Fragment {
 
         binding = FragmentRecentUploadsBinding.inflate(inflater, container, false);
 
-        binding.loadMoreAnimeBtn.setOnFocusChangeListener((view, b) -> {
-            if (b){
-                binding.loadMoreAnimeBtn.setBackgroundColor(activity.getColor(R.color.orange));
+        binding.loadMoreAnimeBtn.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus){
+                binding.loadMoreAnimeBtn.setBackgroundColor(activity.getColor(R.color.red));
             } else {
                 binding.loadMoreAnimeBtn.setBackgroundColor(activity.getColor(R.color.fade_blue));
             }
@@ -137,7 +139,7 @@ public class RecentUploadsFragment extends Fragment {
                         }
 
                     } catch (Exception e){
-                        e.printStackTrace();
+                        Log.e(TAG, "onScrapeComplete: ", e);
                         CustomMethods.errorAlert(activity, "Json Error", e.getMessage(), "OK", true);
                     }
                 }

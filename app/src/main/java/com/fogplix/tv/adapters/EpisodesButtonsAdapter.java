@@ -2,6 +2,7 @@ package com.fogplix.tv.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,11 +65,11 @@ public class EpisodesButtonsAdapter extends RecyclerView.Adapter<EpisodesButtons
                 holder.episodeButton.setBackgroundColor(context.getColor(R.color.black));
             }
 
-            holder.episodeButton.setOnFocusChangeListener((view, b) -> {
+            holder.episodeButton.setOnFocusChangeListener((view, hasFocus) -> {
 
-                if (b){
+                if (hasFocus){
                     holder.episodeButton.setTextColor(context.getColor(R.color.white));
-                    holder.episodeButton.setBackgroundColor(context.getColor(R.color.orange));
+                    holder.episodeButton.setBackgroundColor(context.getColor(R.color.red));
                 } else {
                     if (episodeId.equals(databaseHandler.getLastWatchedEpisodeId(animeId))){
                         holder.episodeButton.setTextColor(context.getColor(R.color.white));
@@ -81,7 +82,7 @@ public class EpisodesButtonsAdapter extends RecyclerView.Adapter<EpisodesButtons
             });
         }
         catch (Exception e) {
-            e.printStackTrace();
+            Log.e("MADARA", "onBindViewHolder: ", e);
         }
     }
 

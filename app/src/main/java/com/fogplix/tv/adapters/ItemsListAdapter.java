@@ -3,6 +3,7 @@ package com.fogplix.tv.adapters;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 
 public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.MyCustomViewHolder> {
 
+    private static final String TAG = "MADARA";
     private final JSONArray allAnime;
     private final Activity activity;
 
@@ -92,7 +94,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.MyCu
                 holder.releaseDateTV.setText(allAnime.getJSONObject(holder.getBindingAdapterPosition()).getString("releasedDate"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "onBindViewHolder: ", e);
             Toast.makeText(activity, "JSON Error", Toast.LENGTH_SHORT).show();
             CustomMethods.errorAlert(activity, "Error", e.getMessage(), "Ok", true);
         }
@@ -128,7 +130,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.MyCu
                 intent.putExtra("episodeId", allAnime.getJSONObject(holder.getBindingAdapterPosition()).getString("episodeId"));
                 activity.startActivity(intent);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "onBindViewHolder: ", e);
                 Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -211,7 +213,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.MyCu
                     bottomSheetDialog.show();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "onBindViewHolder: ", e);
             }
             return true;
         });
@@ -231,7 +233,7 @@ public class ItemsListAdapter extends RecyclerView.Adapter<ItemsListAdapter.MyCu
             // Return a unique and stable ID for the item.
             return item.getLong("id");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "onBindViewHolder: ", e);
             return RecyclerView.NO_ID;
         }
     }

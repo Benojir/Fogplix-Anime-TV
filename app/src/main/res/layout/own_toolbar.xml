@@ -10,7 +10,11 @@
 
     <ImageButton
         android:id="@+id/navbarLeftBtn"
-        style="@style/ExoStyledControls.Button.Bottom.RepeatToggle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:scaleType="centerInside"
+        android:background="@drawable/round_transparent_ripple_button"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:contentDescription="Navigate"
@@ -43,16 +47,24 @@
 
     <ImageButton
         android:id="@+id/navbarRightBtn"
-        style="@style/ExoStyledControls.Button.Bottom.RepeatToggle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:scaleType="centerInside"
+        android:background="@drawable/round_transparent_ripple_button"
         android:layout_toStartOf="@+id/navInfoBtn"
         android:layout_centerVertical="true"
-        android:contentDescription="Mic"
+        android:contentDescription="Search"
         android:layout_marginEnd="10dp"
         android:src="@drawable/search_24"/>
 
     <ImageButton
         android:id="@+id/navInfoBtn"
-        style="@style/ExoStyledControls.Button.Bottom.RepeatToggle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:scaleType="centerInside"
+        android:background="@drawable/round_transparent_ripple_button"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:contentDescription="Mic"

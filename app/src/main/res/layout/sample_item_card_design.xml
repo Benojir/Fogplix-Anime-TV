@@ -18,7 +18,7 @@
     android:id="@+id/rootCardView"
     tools:targetApi="p"
     android:nextFocusDown="@+id/loadMoreAnimeBtn"
-    android:backgroundTint="@color/orange">
+    android:backgroundTint="@color/red">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"

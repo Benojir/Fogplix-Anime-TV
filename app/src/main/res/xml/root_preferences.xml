@@ -1,0 +1,21 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:key="use_proxy"
+        app:summaryOff="@string/proxy_setting_summary_off"
+        app:summaryOn="@string/proxy_setting_summary_on"
+        app:title="@string/proxy_setting_title" />
+
+    <SwitchPreferenceCompat
+        app:key="85s_skipping_button"
+        app:summaryOff="@string/skip_85s_summary_off"
+        app:summaryOn="@string/skip_85s_summary_on"
+        app:title="@string/skip_85s_title" />
+
+    <SwitchPreferenceCompat
+        app:key="auto_play_next_episode"
+        app:summaryOff="@string/auto_play_next_episode_summary_off"
+        app:summaryOn="@string/auto_play_next_episode_summary_on"
+        app:title="@string/auto_play_next_episode_title" />
+
+</PreferenceScreen>
