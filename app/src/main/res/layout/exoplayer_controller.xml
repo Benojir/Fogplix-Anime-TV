@@ -97,7 +97,7 @@
             style="@style/ExoStyledControls.Button.Center.PlayPause"
             android:layout_marginHorizontal="25dp"
             android:nextFocusRight="@id/backward_10"
-            android:nextFocusDown="@id/exo_progress"
+            android:nextFocusDown="@id/skipIntroOutroBtn"
             android:nextFocusForward="@id/backward_10"
             android:src="@drawable/skip_previous_24"
             tools:ignore="DuplicateSpeakableTextCheck" />
@@ -108,7 +108,7 @@
             android:layout_marginHorizontal="0dp"
             android:nextFocusForward="@id/exo_play_pause"
             android:nextFocusRight="@id/exo_play_pause"
-            android:nextFocusDown="@id/exo_progress"
+            android:nextFocusDown="@id/skipIntroOutroBtn"
             android:src="@drawable/replay_10_24" />
 
         <ImageButton
@@ -116,7 +116,7 @@
             style="@style/ExoStyledControls.Button.Center.PlayPause"
             android:nextFocusForward="@id/forward_10"
             android:nextFocusRight="@id/forward_10"
-            android:nextFocusDown="@id/exo_progress"
+            android:nextFocusDown="@id/skipIntroOutroBtn"
             android:layout_marginHorizontal="30dp" />
 
         <ImageButton
@@ -124,7 +124,7 @@
             style="@style/ExoStyledControls.Button.Center.PlayPause"
             android:nextFocusForward="@id/next_episode"
             android:nextFocusRight="@id/next_episode"
-            android:nextFocusDown="@id/exo_progress"
+            android:nextFocusDown="@id/skipIntroOutroBtn"
             android:layout_marginHorizontal="0dp"
             android:src="@drawable/forward_10_24" />
 
@@ -133,7 +133,7 @@
             style="@style/ExoStyledControls.Button.Center.PlayPause"
             android:nextFocusForward="@id/skipIntroOutroBtn"
             android:nextFocusRight="@id/skipIntroOutroBtn"
-            android:nextFocusDown="@id/exo_progress"
+            android:nextFocusDown="@id/skipIntroOutroBtn"
             android:layout_marginHorizontal="25dp"
             android:src="@drawable/skip_next_24" />
 
