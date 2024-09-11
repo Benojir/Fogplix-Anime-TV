@@ -35,9 +35,6 @@
     <string name="proxy_setting_title">Proxy</string>
     <string name="proxy_setting_summary_on">Now you are able to browse Fogplix Anime through proxy</string>
     <string name="proxy_setting_summary_off">Use proxy to bypass your ISP (Internet Service Provider) blockage</string>
-    <string name="skip_85s_title">Show 85s Skip Button</string>
-    <string name="skip_85s_summary_on">85 seconds skip button is enabled</string>
-    <string name="skip_85s_summary_off">85 seconds skip button is disabled.</string>
     <string name="auto_play_next_episode_summary_off">Next episode will not play automatically.</string>
     <string name="auto_play_next_episode_summary_on">Next episode will be played when current episode ended.</string>
     <string name="auto_play_next_episode_title">Auto Play Next Episode</string>
