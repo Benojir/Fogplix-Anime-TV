@@ -92,10 +92,11 @@
             android:configChanges="orientation|uiMode|screenSize|keyboardHidden"
             android:exported="false"
             android:hardwareAccelerated="true"
-            android:screenOrientation="sensorLandscape"></activity>
+            android:screenOrientation="sensorLandscape"
+            tools:ignore="DiscouragedApi" />
         <activity
             android:name=".activities.DetailsActivity"
-            android:configChanges="uiMode|orientation|screenSize"
+            android:configChanges="orientation|uiMode|screenSize|keyboardHidden"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

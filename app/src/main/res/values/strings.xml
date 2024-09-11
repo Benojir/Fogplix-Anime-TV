@@ -1,6 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Fogplix Anime</string>
-    <string name="header_layout_sub_text">Fogplix Anime</string>
+<resources>
+    <string name="app_name">Fogplix TV</string>
 
     <string name="subbed">Sub</string>
     <string name="dubbed">Dub</string>
@@ -13,14 +12,11 @@
     <string name="proxy_browser_link">https://proxy.fogplix-anime.com/browse.php?link=</string>
 
     <string name="user_agent">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36</string>
-    <string name="app_sharing_message">Watch free anime (Dubbed and Subbed) with Fogplix Anime app. Download now from </string>
-    <string name="onesignal_app_id" tools:ignore="TypographyDashes,Typos">c0feb5c5-3fe1-490a-bcf2-0af7ed45a18b</string>
     <string name="compose_shortcut_label_for_favorites">Favorites</string>
     <string name="compose_shortcut_label_for_search">Search</string>
 
     <string name="version_page_link">https://benojir.github.io/Fogplix-Landing-Page/updates/version-tv.json</string>
     <string name="new_notice_json_link">https://benojir.github.io/Fogplix-Landing-Page/updates/fogplix-alert-tv.json</string>
-    <string name="playable_servers_status_json_link">https://benojir.github.io/Fogplix-Landing-Page/updates/playable-servers-status.json</string>
 
     <string name="gogoload_recent">https://ajax.gogocdn.net/ajax/page-recent-release.html</string>
     <string name="gogoload_list_episodes">https://ajax.gogocdn.net/ajax/load-list-episode</string>

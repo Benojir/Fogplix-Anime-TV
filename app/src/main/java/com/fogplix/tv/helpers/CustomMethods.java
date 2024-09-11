@@ -137,24 +137,6 @@ public class CustomMethods {
         }
     }
 
-    public static void warningAlert(Activity activity, String warningTitle, String warningBody, String actionButton, boolean shouldGoBack) {
-        if (!activity.isFinishing()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle(warningTitle);
-            builder.setMessage(warningBody);
-            builder.setIcon(R.drawable.warning);
-            builder.setPositiveButton(actionButton, (dialogInterface, i) -> {
-                if (shouldGoBack) {
-                    activity.finish();
-                } else {
-                    dialogInterface.dismiss();
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
-    }
-
 //--------------------------------------------------------------------------------------------------
 
     public static void checkNewNotice(Context context, TextView textView) {
@@ -164,8 +146,7 @@ public class CustomMethods {
         new Thread(() -> {
 
             try {
-                String newNoticeJSON =
-                        Jsoup.connect(context.getString(R.string.new_notice_json_link))
+                String newNoticeJSON = Jsoup.connect(context.getString(R.string.new_notice_json_link))
                                 .timeout(30000)
                                 .ignoreContentType(true)
                                 .execute().body();
@@ -212,8 +193,7 @@ public class CustomMethods {
         new Thread(() -> {
 
             try {
-                String versionInfoJSON =
-                        Jsoup.connect(activity.getString(R.string.version_page_link))
+                String versionInfoJSON = Jsoup.connect(activity.getString(R.string.version_page_link))
                                 .timeout(30000)
                                 .ignoreContentType(true)
                                 .execute().body();

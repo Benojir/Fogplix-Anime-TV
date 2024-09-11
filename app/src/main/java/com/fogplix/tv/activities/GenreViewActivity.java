@@ -2,6 +2,7 @@ package com.fogplix.tv.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import org.json.JSONException;
 
 public class GenreViewActivity extends AppCompatActivity {
 
+    private static final String TAG = "MADARA";
     private ActivityGenreViewBinding binding;
     private GridLayoutManager layoutManager;
     private ItemsListAdapter rvAdapter;
@@ -39,6 +41,7 @@ public class GenreViewActivity extends AppCompatActivity {
         ownToolbarBinding.ownToolbarTV.setVisibility(View.VISIBLE);
         ownToolbarBinding.imageViewMiddle.setVisibility(View.GONE);
         ownToolbarBinding.navbarRightBtn.setVisibility(View.GONE);
+        ownToolbarBinding.navInfoBtn.setVisibility(View.GONE);
 
         genre = getIntent().getStringExtra("genre");
 
@@ -46,6 +49,15 @@ public class GenreViewActivity extends AppCompatActivity {
             String genreName = genre.replace("-", " ");
             ownToolbarBinding.ownToolbarTV.setText(CustomMethods.capitalize(genreName));
         }
+
+        ownToolbarBinding.navbarLeftBtn.setOnClickListener(view -> onBackPressed());
+        ownToolbarBinding.navbarLeftBtn.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                ownToolbarBinding.navbarLeftBtn.setBackgroundResource(R.drawable.button_focused);
+            } else {
+                ownToolbarBinding.navbarLeftBtn.setBackgroundResource(R.drawable.button_default);
+            }
+        });
 
         int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 
@@ -82,10 +94,6 @@ public class GenreViewActivity extends AppCompatActivity {
             page = page + 1;
             loadAnime(page);
         });
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        ownToolbarBinding.navbarLeftBtn.setOnClickListener(view -> onBackPressed());
     }
 
 //    ----------------------------------------------------------------------------------------------
@@ -135,7 +143,7 @@ public class GenreViewActivity extends AppCompatActivity {
                         }
 
                     } catch (JSONException e){
-                        e.printStackTrace();
+                        Log.e(TAG, "onScrapeComplete: ", e);
                         CustomMethods.errorAlert(GenreViewActivity.this, "Error (Json)", e.getMessage(), "OK", false);
                     }
                 }

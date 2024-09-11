@@ -161,13 +161,6 @@ public class PlayerActivity extends AppCompatActivity {
 
         //------------------------------------------------------------------------------------------
 
-        if (preferences.getBoolean("85s_skipping_button", false)) {
-            skipIntroOutroBtn.setVisibility(View.VISIBLE);
-            skipIntroOutroBtn.setText("Skip 85s");
-        }
-
-        //------------------------------------------------------------------------------------------
-
         episodeLoadingTV.setText("Loading episode " + CustomMethods.extractEpisodeNumberFromId(episodeId));
 
         GenerateDirectLink generateDirectLink = new GenerateDirectLink(this);
@@ -227,9 +220,15 @@ public class PlayerActivity extends AppCompatActivity {
         //+++++++++++++++++++++++ Below section is handing button actions ++++++++++++++++++++++++++
 
         skipIntroOutroBtn.setOnClickListener(v -> {
-            if (preferences.getBoolean("85s_skipping_button", false)) {
-                long currentVideoPosition = exoPlayer.getCurrentPosition();
-                exoPlayer.seekTo(currentVideoPosition + 85000);
+            long currentVideoPosition = exoPlayer.getCurrentPosition();
+            exoPlayer.seekTo(currentVideoPosition + 85000);
+        });
+
+        skipIntroOutroBtn.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                skipIntroOutroBtn.setTextColor(getColor(R.color.green));
+            } else {
+                skipIntroOutroBtn.setTextColor(getColor(R.color.white));
             }
         });
 
@@ -479,10 +478,7 @@ public class PlayerActivity extends AppCompatActivity {
                 }
 
                 if (playbackState == Player.STATE_READY) {
-                    if (preferences.getBoolean("85s_skipping_button", false)) {
-                        skipIntroOutroBtn.setVisibility(View.VISIBLE);
-                    }
-
+                    skipIntroOutroBtn.setVisibility(View.VISIBLE);
                     exoPlayerView.setVisibility(View.VISIBLE);
                     bufferingProgressBar.setVisibility(View.GONE);
                     videoNameTV.setText(animeTitle.trim());

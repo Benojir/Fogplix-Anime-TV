@@ -65,11 +65,13 @@ public class GenreCardAdapter extends RecyclerView.Adapter<GenreCardAdapter.MyCu
             return false;
         });
 
-        holder.itemView.setOnFocusChangeListener((view, b) -> {
-            if (b) {
-                holder.cardView.setCardBackgroundColor(context.getColor(R.color.orange));
+        holder.itemView.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                holder.cardView.setCardBackgroundColor(context.getColor(R.color.white));
+                holder.genreTV.setTextColor(context.getColor(R.color.black));
             } else {
                 holder.cardView.setCardBackgroundColor(color);
+                holder.genreTV.setTextColor(context.getColor(R.color.white));
             }
         });
     }
